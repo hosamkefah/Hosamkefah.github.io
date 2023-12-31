@@ -1,20 +1,20 @@
-#include <xc.h>
+#include <pic16f877a.h>
 
-#define _XTAL_FREQ 8000000  // Assuming an 8MHz crystal oscillator
+#define _XTAL_FREQ 8000000
 
 void main() {
-    TRISC2 = 0;  // Set CCP1 pin as output
-    CCP1CON = 0b00001100;  // Configure CCP1 for PWM
+    TRISC2 = 0;
+    CCP1CON = 0b00001100;
 
-    T2CON = 0b00000101;  // Configure Timer2 with a prescaler of 4
+    T2CON = 0b00000101;
 
     while (1) {
         // Move servo to 180 degrees
-        CCPR1L = 0x0A;  // Duty cycle for 180 degrees (adjust as needed)
-        __delay_ms(1000);  // Delay for servo to reach the desired position
+        CCPR1L = 0x0A;
+        __delay_ms(1000);
 
         // Move servo to 0 degrees
-        CCPR1L = 0x04;  // Duty cycle for 0 degrees (adjust as needed)
-        __delay_ms(1000);  // Delay for servo to reach the desired position
+        CCPR1L = 0x04;
+        __delay_ms(1000);
     }
 }
