@@ -1,0 +1,72 @@
+#include <stdint.h>
+
+// Configuration settings for PIC16F877A (8MHz)
+#pragma config FOSC = HS
+#pragma config WDTE = OFF
+#pragma config PWRTE = OFF
+#pragma config MCLRE = OFF
+#pragma config CP = OFF
+#define _XTAL_FREQ 8000000 // Adjust based on your oscillator frequency
+
+void initialize_ADC();
+uint16_t read_ADC();
+float convert_to_temperature(uint16_t adc_value);
+
+void display_temperature_on_LEDs(uint8_t temperature);
+
+void main(void) {
+    TRISA = 0xFF; // Set PORTA as input for ADC
+    TRISB = 0x00; // Set PORTB as output for LEDs
+
+    initialize_ADC();
+
+    while (1) {
+        uint16_t adc_value = read_ADC();  // Changed from uint16_t to int
+        float temperature = convert_to_temperature(adc_value);
+
+        // Convert floating-point temperature to integer for display
+        uint8_t temperature_int = (uint8_t)temperature;
+
+        display_temperature_on_LEDs(temperature_int);
+
+        delay_ms(1000); // Adjust delay as needed
+    }
+
+    return;
+}
+
+void initialize_ADC() {
+    // Configure ADC module
+    ADCON0 = 0b10000001; // Select channel AN0
+    ADCON1 = 0b00000000; // VDD is the reference voltage, AN0 is analog
+
+    // Configure ADC clock
+
+    ADCON1.F7 = 1;    // Right justify result
+
+    // Turn on ADC module
+    ADCON0.F0 = 1;
+}
+
+uint16_t read_ADC() {  // Changed from uint16_t to int
+    // Start ADC conversion
+    ADCON0.F2 = 1;
+
+    // Wait for conversion to complete
+    while (ADCON0.F2);
+
+    // Read ADC result
+    return (ADRESH << 8 | ADRESL;
+}
+
+float convert_to_temperature(uint16_t adc_value) {  // Changed from uint16_t to int
+    // Assuming Vref is 5.0V and LM35 scale factor is 10 mV/°C
+    float voltage = (float)adc_value / 1023.0 * 5.0;
+    float temperature = (voltage - 0.5) * 100.0; // Scaling factor is 10 mV/°C
+
+    return temperature;
+}
+
+void display_temperature_on_LEDs(uint8_t temperature) {
+    PORTB = temperature; // Assuming PORTB is connected to LEDs
+}
