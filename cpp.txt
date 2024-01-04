@@ -1,0 +1,42 @@
+void servo_0(){
+unsigned int i =0;
+ do
+{
+    portb.f0=1;
+    delay_us(750);
+    portb.f0=0;
+    delay_us(19250);
+    i++;
+}
+while(i<50);
+}
+void servo_180(){
+unsigned int i =0;
+ do
+{
+    portb.f0=1;
+    delay_us(2250);
+    portb.f0=0;
+    delay_us(17750);
+    i++;
+}
+while(i<50);
+}
+void main() {
+unsigned int temp;
+trisa=0xff;
+trisb=0x00;
+portb=0x00;
+ADC_Init();
+while(1)
+{
+temp = ADC_Read(0);
+temp = (temp * 500) / 1023;
+
+if (temp < 24)
+   servo_0();
+else
+    servo_180();
+
+}
+}
