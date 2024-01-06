@@ -1,0 +1,49 @@
+void servo_0(){
+unsigned int i =0;
+ do
+{
+    portb.f0=1;
+    delay_us(750);
+    portb.f0=0;
+    delay_us(19250);
+    i++;
+}
+while(i<50);
+}
+void servo_180(){
+unsigned int i =0;
+ do
+{
+    portb.f0=1;
+    delay_us(2250);
+    portb.f0=0;
+    delay_us(17750);
+    i++;
+}
+while(i<50);
+}
+void main() {
+unsigned int temp;
+trisa=0xff;
+trisb=0x00;
+trisc=0x00;
+ADC_Init();
+PWM1_Init(500);
+PWM1_Start();
+
+while(1)
+{
+unsigned int i;
+PWM1_Set_Duty(i%200);
+Delay_ms(500) ;
+temp = ADC_Read(0);
+temp = (temp * 500) / 1023;
+i+=50;
+if (temp < 24)
+   servo_0();
+else
+    servo_180();
+
+}
+}
+
