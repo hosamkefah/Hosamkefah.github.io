@@ -38,7 +38,7 @@ unsigned int i =0;
 }
 while(i<50);
 }
-
+unsigned int ii=0;
 unsigned int fff=0;
 void main() {
 unsigned int temp;
@@ -46,33 +46,41 @@ trisa=0xff;
 trisb=0x00;
 trisc=0x00;
 ADC_Init();
-PWM1_Init(500);
+PWM1_Init(5000);
 PWM1_Start();
  fff=0;
 while(1)
 {
-unsigned int i=0;
-PWM1_Set_Duty(i%201);
-Delay_ms(500) ;
+
+PWM1_Set_Duty(ii);
+//Delay_ms(1000) ;
 temp = ADC_Read(0);
 temp = (temp * 500) / 1023;
-
+ 
 
 if (fff==0){
-   i+=25;
-   if(i==200)fff=1;
+   ii+=50;
+   if(ii==250)fff=1;
 }
 else {
-  i-=25;
-  if (i==0)fff=0;
+  ii-=50;
+  if (ii==0)fff=0;
 }
 
-if (temp<=25)
-    servo_0();
-else if (25 <temp < 30)
+if (temp<=22)
+  {
+      servo_0();
+      Delay_ms(1000) ;
+      }
+ if (22 <temp < 25)
+ {
      servo_90();
-else if (temp>=30)
+     Delay_ms(1000) ;}
+ if(temp>=25)
+ {
     servo_180();
+    Delay_ms(1000) ;}
+
 
 }
 }
